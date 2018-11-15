@@ -1,7 +1,6 @@
 '''Trains a simple convnet on the MNIST dataset.
-Gets to 99.25% test accuracy after 12 epochs
-(there is still a lot of margin for parameter tuning).
-16 seconds per epoch on a GRID K520 GPU.
+Details of MNIST processing with Keras
+https://www.kaggle.com/adityaecdrid/mnist-with-keras-for-beginners-99457#
 '''
 
 from __future__ import print_function
@@ -122,15 +121,48 @@ for i in range(2,total_layer_number):
 print('AT shape', AT.shape)
 
 ##argmin AT(x)-AT(x_i) compute dist_a
-t=np.array([])
-for i in range(AT.shape[0]-1):
-	t=np.append(t,np.linalg.norm(AT[i]-AT[-1]))
-print('t shape',t.shape)
 
-min_index=np.argmin(t)
-print('min index',min_index,'value',t[min_index])
+C=2
+C=keras.utils.to_categorical(C, num_classes)
+print('Class', C)
+#print('y_train[1]',y_train[1])
+
+t_a=np.array([])
+for i in range(AT.shape[0]-1):
+	if(np.array_equal(y_train[i],C)):
+		t_a=np.append(t_a,np.linalg.norm(AT[i]-AT[-1]))
+	else:
+		t_a=np.append(t_a,9999)
+		
+print('t_a shape',t_a.shape)
+
+min_index=np.argmin(t_a)
+print('min index',min_index,'value',t_a[min_index])
 print('AT_a',AT[min_index])
 
 dist_a=np.linalg.norm(AT[-1]-AT[min_index])
 print('dist_a',dist_a)
 
+###argmin AT(x)-AT(x_i) compute dist_b
+t_b=np.array([])
+for i in range(AT.shape[0]-1):
+	if(np.array_equal(y_train[i],C)):
+		t_b=np.append(t_b,9999)
+	else:
+		t_b=np.append(t_b,np.linalg.norm(AT[i]-AT[-1]))
+		
+		
+print('t_b shape',t_a.shape)
+
+min_index=np.argmin(t_b)
+print('min index',min_index,'value',t_b[min_index])
+print('AT_a',AT[min_index])
+
+dist_b=np.linalg.norm(AT[-1]-AT[min_index])
+print('dist_b',dist_b)
+
+
+##DSA = dist_a/dist_b
+DSA=dist_a/dist_b
+print('DSA',DSA)
+print('Class',C)
