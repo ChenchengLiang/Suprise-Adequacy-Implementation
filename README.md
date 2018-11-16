@@ -8,5 +8,7 @@ In folder SA, I will try to modulize the codes and expand one new input to multi
 TO DO:
 
 SA/LSA.py
+
 SA/DSA.py
-fix the glitch when compute KDE in TEST/MNIST-LSA-TEST.py
+
+Fix the glitch when compute KDE in TEST/MNIST-LSA-TEST.py
