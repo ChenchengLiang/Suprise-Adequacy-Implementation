@@ -90,7 +90,7 @@ score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 '''
-## compute AT
+## compute AT from train data
 total_layer_number=len(model.layers[:])
 print('Totoal Layer:',total_layer_number)
 
@@ -118,7 +118,40 @@ for i in range(2,total_layer_number):
 	AT=np.concatenate((AT,layer_output_from_train), axis=1)
 	#print('after concatenate AT shape:',AT.shape)                              
 
-print('AT shape', AT.shape)
+print('AT_train shape', AT.shape)
+
+
+## compute AT from test data
+total_layer_number=len(model.layers[:])
+print('Totoal Layer:',total_layer_number)
+
+get_layer_output = K.function([model.layers[0].input, K.learning_phase()],
+                                  [model.layers[1].output])
+AT_test=get_layer_output([x_test, 0])[0]
+print('Test mode layer 1 output shape',AT_test.shape)                                  
+
+for i in range(2,total_layer_number):
+	get_layer_output = K.function([model.layers[0].input, K.learning_phase()],
+                                  [model.layers[i].output])
+	layer_output_from_test = get_layer_output([x_test, 0])[0]
+	print('Test mode layer', i, 'output shape',layer_output_from_test.shape)
+		
+	neuron_number=layer_output_from_test.size/layer_output_from_test.shape[0]
+	layer_output_from_test=np.reshape(layer_output_from_test,(layer_output_from_test.shape[0],int(neuron_number)))
+	#print('re-shaped layer_output_from_test:',layer_output_from_test.shape)
+	
+	neuron_number=AT_test.size/AT_test.shape[0]
+	AT_test=np.reshape(AT_test,(AT_test.shape[0],int(neuron_number)))
+	#print('re-shaped AT_test:',AT_test.shape)
+	
+	
+	#print('before concatenate AT shape:',AT_test.shape)
+	AT_test=np.concatenate((AT_test,layer_output_from_test), axis=1)
+	#print('after concatenate AT_test shape:',AT_test.shape)                              
+
+print('AT_test shape', AT_test.shape)
+
+
 
 ##argmin AT(x)-AT(x_i) compute dist_a
 
