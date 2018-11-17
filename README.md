@@ -9,6 +9,4 @@ TO DO:
 
 SA/LSA.py
 
-SA/DSA.py
-
 Fix the glitch when compute KDE in TEST/MNIST-LSA-TEST.py
